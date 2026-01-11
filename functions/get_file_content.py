@@ -1,5 +1,6 @@
 import config
 import os
+from google.genai import types
 
 def get_file_content(working_directory, file_path):
     working_dir_abs = os.path.abspath(working_directory)
@@ -14,3 +15,17 @@ def get_file_content(working_directory, file_path):
         if file.read(1):
             file_content_string += f'[...File "{file_path}" truncated at {config.MAX_CHARS} characters]'
     return file_content_string
+
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Reads a file from the specified path",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="File path of the file to read, relative to the working directory (default is the working directory itself)",
+            ),
+        },
+    ),
+)
